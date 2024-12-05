@@ -74,9 +74,11 @@ def translate_kanbun_to_english(kanbun):
 def extract_vocabulary(kanbun):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "system", "content": "You are an expert in analyzing Kanbun vocabulary."},
-                  {"role": "user", "content": f"Extract important vocabulary from the following Kanbun: {kanbun}"}],
-        max_tokens=200,
+        messages=[
+            {"role": "system", "content": "You are an expert in analyzing Kanbun (Chinese texts with Japanese reading order) and providing translations with part-of-speech tagging."},
+            {"role": "user", "content": f"Extract important vocabulary from the following Kanbun text (a Chinese poem with Japanese reading order) and provide the English translation along with part-of-speech tags (e.g., noun, verb, adjective, etc.):\n{kanbun}"}
+        ],
+        max_tokens=500,
         temperature=0.7
     )
     vocabulary = response.choices[0].message.content.strip()
