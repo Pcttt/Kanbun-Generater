@@ -26,7 +26,7 @@ st.markdown("""
     .stButton button:hover {
         background-color: #4FC3F7; /* Slightly darker blue on hover */
     }
-    .stTextInput input {
+    .stTextInput textarea {
         background-color: #E3F2FD; /* Light blue input field */
         color: #0D47A1; /* Dark blue text */
         font-size: 14px;
@@ -51,11 +51,9 @@ def generate_kanbun(prompt):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "system", "content": "You are a skilled Kanbun (classical Chinese) poet."},
-                  {"role": "user", "content": prompt}],
-        max_tokens=100,
-        temperature=0.7
+                  {"role": "user", "content": prompt}]
     )
-    kanbun = response.choices[0].message['content'].strip()
+    kanbun = response['choices'][0]['message']['content'].strip()
     return kanbun
 
 # Function to translate Kanbun to English
@@ -63,11 +61,9 @@ def translate_kanbun_to_english(kanbun):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "system", "content": "You are an expert in translating Kanbun (classical Chinese) into English."},
-                  {"role": "user", "content": f"Translate this Kanbun into English: {kanbun}"}],
-        max_tokens=200,
-        temperature=0.7
+                  {"role": "user", "content": f"Translate this Kanbun into English: {kanbun}"}]
     )
-    translation = response.choices[0].message['content'].strip()
+    translation = response['choices'][0]['message']['content'].strip()
     return translation
 
 # Function to extract vocabulary from Kanbun
@@ -77,11 +73,9 @@ def extract_vocabulary(kanbun):
         messages=[
             {"role": "system", "content": "You are an expert in analyzing Kanbun (Chinese texts with Japanese reading order) and providing translations with part-of-speech tagging."},
             {"role": "user", "content": f"Extract important vocabulary from the following Kanbun text (a Chinese poem with Japanese reading order) and provide the English translation along with part-of-speech tags (e.g., noun, verb, adjective, etc.):\n{kanbun}"}
-        ],
-        max_tokens=500,
-        temperature=0.7
+        ]
     )
-    vocabulary = response.choices[0].message['content'].strip()
+    vocabulary = response['choices'][0]['message']['content'].strip()
     return vocabulary
 
 # Main application function
