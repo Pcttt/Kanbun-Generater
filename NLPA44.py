@@ -1,110 +1,103 @@
 import openai
 import streamlit as st
 import pandas as pd
+from io import BytesIO
 
-# ตั้งค่า API key ของ OpenAI
-# ตั้งค่า API Key
-
+# Sidebar for OpenAI API key
 openai_api_key = st.sidebar.text_input("Enter your OpenAI API Key", type="password")
-# ตรวจสอบการเชื่อมต่อ OpenAI API
-if openai_api_key:
-   openai.api_key = 'your-api-key'
+if not openai_api_key:
+    st.warning("Please enter your OpenAI API key to continue.")
+    st.stop()
 
-# ฟังก์ชันในการสร้างกลอนคันบุน (漢文) โดยใช้ OpenAI API (ChatCompletion)
+openai.api_key = openai_api_key
+
+# Functions
 def generate_kanbun(prompt):
-    # ส่งคำขอไปยัง ChatGPT เพื่อสร้างกลอน
-    response = openai.chat.completions.create(
-        model="gpt-3.5-turbo",  # หรือ "gpt-4" ถ้าคุณต้องการใช้ GPT-3.5
-        messages=[{"role": "system", "content": "คุณคือผู้แต่งกลอนคันบุน (漢文) ที่มีความเชี่ยวชาญ"},
-                  {"role": "user", "content": prompt}],
+    response = openai.ChatCompletion.create(
+    model="gpt-4",
+    messages=[
+        {"role": "system", "content": "You are an expert in writing Kanbun (漢文) poems."},
+        {"role": "user", "content": prompt}],
         max_tokens=100,
         temperature=0.7
     )
-    
-    kanbun = response.choices[0].message.content.strip()
-    return kanbun
+    return response.choices[0].message.content.strip()
 
-# ฟังก์ชันในการแปล漢文 เป็นภาษาอังกฤษ
 def translate_kanbun_to_english(kanbun):
-    response = openai.chat.completions.create(
+    response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "system", "content": "คุณคือผู้เชี่ยวชาญด้านการแปล漢文เป็นภาษาอังกฤษ"},
-                  {"role": "user", "content": f"แปลข้อความ漢文นี้เป็นภาษาอังกฤษ: {kanbun}"}],
+        messages=[{"role": "system", "content": "You are an expert in translating Kanbun (漢文) into English."},
+                  {"role": "user", "content": f"Translate this Kanbun into English: {kanbun}"}],
         max_tokens=200,
         temperature=0.7
     )
-    
-    translation = response.choices[0].message.content.strip()
-    return translation
+    return response.choices[0].message.content.strip()
 
-# ฟังก์ชันเพื่อดึงคำศัพท์ที่น่าสนใจจาก漢文
 def extract_vocabulary(kanbun):
-    response = openai.chat.completions.create(
+    response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "system", "content": "คุณคือผู้เชี่ยวชาญด้านคำศัพท์จาก漢文"},
-                  {"role": "user", "content": f"ช่วยรวบรวมคำศัพท์ที่น่าสนใจจากข้อความ漢文นี้: {kanbun}"}],
+        messages=[{"role": "system", "content": "You are an expert in extracting vocabulary from Kanbun (漢文)."},
+                  {"role": "user", "content": f"Extract interesting vocabulary from this Kanbun: {kanbun}"}],
         max_tokens=200,
         temperature=0.7
     )
-    
-    vocabulary = response.choices[0].message.content.strip()
-    return vocabulary
+    return response.choices[0].message.content.strip()
 
-# ฟังก์ชันที่จัดการการแสดงผลลัพธ์ใน Streamlit
+# Main app logic
 def main():
-    st.title("AI แต่งกลอน 漢文 (Kanbun)")
+    st.title("AI Kanbun (漢文) Poem Generator")
+    theme = st.text_input("Enter a theme for the poem (e.g., nature, seasons, flowers):")
 
-    theme = st.text_input("กรุณาระบุธีมของกลอน (เช่น ธรรมชาติ, ฤดู, ดอกไม้):")
-
-    if st.button("สร้างกลอน"):
+    if st.button("Generate Kanbun"):
         if theme:
-            prompt = f"สร้างกลอนคันบุน (漢文) ที่เกี่ยวข้องกับ {theme}"
+            prompt = f"Write a Kanbun (漢文) poem about {theme}."
             kanbun = generate_kanbun(prompt)
-
-            # แปล漢文เป็นภาษาอังกฤษ
             translation = translate_kanbun_to_english(kanbun)
-
-            # รวบรวมคำศัพท์ที่น่าสนใจ
             vocabulary = extract_vocabulary(kanbun)
 
-            st.subheader("กลอนคันบุนที่สร้างขึ้น:")
+            st.subheader("Generated Kanbun:")
             st.write(kanbun)
 
-            st.subheader("การแปลเป็นภาษาอังกฤษ:")
+            st.subheader("English Translation:")
             st.write(translation)
 
-            st.subheader("คำศัพท์ที่น่าสนใจจาก漢文:")
+            st.subheader("Interesting Vocabulary:")
             st.write(vocabulary)
 
             data = {
-                "ธีม": [theme],
-                "กลอนคันบุน": [kanbun],
-                "แปลเป็นภาษาอังกฤษ": [translation],
-                "คำศัพท์ที่น่าสนใจ": [vocabulary]
+                "Theme": [theme],
+                "Kanbun": [kanbun],
+                "Translation": [translation],
+                "Vocabulary": [vocabulary]
             }
             df = pd.DataFrame(data)
 
-            # แสดง DataFrame
-            st.subheader("ข้อมูลในรูปแบบตาราง:")
+            st.subheader("Data Table:")
             st.dataframe(df)
 
-            # ปุ่มดาวน์โหลดข้อมูลเป็น CSV
+            # CSV download
             st.download_button(
-                label="ดาวน์โหลดข้อมูลเป็น CSV",
+                label="Download as CSV",
                 data=df.to_csv(index=False),
                 file_name="kanbun_data.csv",
                 mime="text/csv"
             )
 
-            # ปุ่มดาวน์โหลดข้อมูลเป็น Excel
+            # Excel download
+            excel_data = BytesIO()
+            df.to_excel(excel_data, index=False, engine='openpyxl')
+            excel_data.seek(0)
             st.download_button(
-                label="ดาวน์โหลดข้อมูลเป็น Excel",
-                data=df.to_excel(index=False, engine='openpyxl'),
+                label="Download as Excel",
+                data=excel_data,
                 file_name="kanbun_data.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
         else:
-            st.warning("กรุณาระบุธีมของกลอนเพื่อสร้าง")
+            st.warning("Please provide a theme for the poem.")
+
 
 if __name__ == "__main__":
     main()
+
+
