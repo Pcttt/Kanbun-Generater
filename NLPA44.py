@@ -8,7 +8,7 @@ import pandas as pd
 openai_api_key = st.sidebar.text_input("Enter your OpenAI API Key", type="password")
 # ตรวจสอบการเชื่อมต่อ OpenAI API
 if openai_api_key:
-   openai.api_key = 'your-api-key'
+   openai.api_key='your-api-key'
 
 # ฟังก์ชันในการสร้างกลอนคันบุน (漢文) โดยใช้ OpenAI API (ChatCompletion)
 def generate_kanbun(prompt):
@@ -52,9 +52,9 @@ def extract_vocabulary(kanbun):
 
 # ฟังก์ชันที่จัดการการแสดงผลลัพธ์ใน Streamlit
 def main():
-    st.title("AI แต่งกลอน 漢文 (Kanbun)")
+    st.title("แต่งกลอน 漢文 (Kanbun)")
 
-    theme = st.text_input("กรุณาระบุธีมของกลอน (เช่น ธรรมชาติ, ฤดู, ดอกไม้):")
+    theme = st.text_input("กรุณาระบุธีมของกลอน:")
 
     if st.button("สร้างกลอน"):
         if theme:
