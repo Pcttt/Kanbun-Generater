@@ -48,14 +48,14 @@ if openai_api_key:
 
 # Function to generate Kanbun
 def generate_kanbun(prompt):
-    response = openai.Chat.Completion.create(
+    response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "system", "content": "You are a skilled Kanbun (classical Chinese) poet."},
                   {"role": "user", "content": prompt}],
         max_tokens=100,
         temperature=0.7
     )
-    kanbun = response.choices[0].message.content.strip()
+    kanbun = response.choices[0].message['content'].strip()
     return kanbun
 
 # Function to translate Kanbun to English
@@ -67,7 +67,7 @@ def translate_kanbun_to_english(kanbun):
         max_tokens=200,
         temperature=0.7
     )
-    translation = response.choices[0].message.content.strip()
+    translation = response.choices[0].message['content'].strip()
     return translation
 
 # Function to extract vocabulary from Kanbun
@@ -81,7 +81,7 @@ def extract_vocabulary(kanbun):
         max_tokens=500,
         temperature=0.7
     )
-    vocabulary = response.choices[0].message.content.strip()
+    vocabulary = response.choices[0].message['content'].strip()
     return vocabulary
 
 # Main application function
@@ -91,14 +91,14 @@ def main():
     # Brief explanation about Kanbun
     st.markdown("""
     **What is Kanbun?**  
-    Kanbun (漢文) refers to classical Chinese literature, widely used historically in Japan. It is known for its poetic elegance and scholarly depth. This application generates Kanbun poetry based on a theme, translates it into English, and provides key vocabulary for further analysis.
+    Kanbun (漢文) refers to classical Chinese literature, widely used historically in Japan. It is known for its poetic elegance and scholarly depth. This application generates Kanbun poetry based on a passage or sentence, translates it into English, and provides key vocabulary for further analysis.
     """)
 
-    theme = st.text_input("🌼 Enter a theme for the Kanbun poem (e.g., nature, seasons, flowers):")
+    sentence = st.text_area("🌼 Enter a sentence or passage for the Kanbun poem (e.g., a short story or a descriptive paragraph):")
 
     if st.button("✨ Generate Kanbun ✨"):
-        if theme:
-            prompt = f"Create a Kanbun (classical Chinese) poem about {theme}."
+        if sentence:
+            prompt = f"Create a Kanbun (classical Chinese) poem based on the following sentence or passage: {sentence}"
             kanbun = generate_kanbun(prompt)
 
             # Translate Kanbun to English
@@ -117,7 +117,7 @@ def main():
             st.write(vocabulary)
 
             data = {
-                "Theme": [theme],
+                "Input Sentence/Passage": [sentence],
                 "Kanbun Poem": [kanbun],
                 "English Translation": [translation],
                 "Key Vocabulary": [vocabulary]
@@ -143,7 +143,7 @@ def main():
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
         else:
-            st.warning("⚠️ Please enter a theme to generate a poem ⚠️")
+            st.warning("⚠️ Please enter a sentence or passage to generate a poem ⚠️")
 
 if __name__ == "__main__":
     main()
