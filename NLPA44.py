@@ -2,17 +2,55 @@ import openai
 import streamlit as st
 import pandas as pd
 
-# Configure the OpenAI API key
-openai_api_key = st.sidebar.text_input("Enter your OpenAI API Key", type="password")
+# Add custom styling
+st.markdown("""
+    <style>
+    body {
+        background-color: #F5F5F5; /* Light gray background */
+    }
+    .stApp {
+        background-color: #F5F5F5;
+    }
+    h1 {
+        color: #1E88E5; /* Blue title color */
+        font-family: 'Arial', sans-serif;
+        text-align: center;
+    }
+    .stButton button {
+        background-color: #81D4FA; /* Light blue buttons */
+        color: #0D47A1; /* Dark blue text */
+        font-size: 16px;
+        border-radius: 12px;
+        border: 2px solid #29B6F6;
+    }
+    .stButton button:hover {
+        background-color: #4FC3F7; /* Slightly darker blue on hover */
+    }
+    .stTextInput input {
+        background-color: #E3F2FD; /* Light blue input field */
+        color: #0D47A1; /* Dark blue text */
+        font-size: 14px;
+        border: 2px solid #64B5F6;
+        border-radius: 10px;
+    }
+    .stDataFrame {
+        background-color: #E8F5E9; /* Light green for DataFrame */
+        border: 2px solid #A5D6A7; /* Green border */
+        border-radius: 10px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+# Sidebar for API key input
+openai_api_key = st.sidebar.text_input("🔑 Enter your OpenAI API Key:", type="password")
 if openai_api_key:
     openai.api_key = openai_api_key
 
-# Function to generate Kanbun (漢文) poems using the OpenAI API
+# Function to generate Kanbun
 def generate_kanbun(prompt):
-    # Send a request to ChatGPT to create a poem
-    response = openai.chat.completions.create(
-        model="gpt-3.5-turbo",  # or "gpt-4" if you want to use GPT-4
-        messages=[{"role": "system", "content": "You are an expert in writing Kanbun (漢文) poems."},
+    response = openai.ChatCompletion.create(
+        model="gpt-3.5-turbo",
+        messages=[{"role": "system", "content": "You are a skilled Kanbun (classical Chinese) poet."},
                   {"role": "user", "content": prompt}],
         max_tokens=100,
         temperature=0.7
@@ -20,11 +58,11 @@ def generate_kanbun(prompt):
     kanbun = response.choices[0].message.content.strip()
     return kanbun
 
-# Function to translate Kanbun (漢文) into English
+# Function to translate Kanbun to English
 def translate_kanbun_to_english(kanbun):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "system", "content": "You are an expert in translating Kanbun (漢文) into English."},
+        messages=[{"role": "system", "content": "You are an expert in translating Kanbun (classical Chinese) into English."},
                   {"role": "user", "content": f"Translate this Kanbun into English: {kanbun}"}],
         max_tokens=200,
         temperature=0.7
@@ -32,76 +70,78 @@ def translate_kanbun_to_english(kanbun):
     translation = response.choices[0].message.content.strip()
     return translation
 
-# Function to extract interesting vocabulary from Kanbun (漢文)
+# Function to extract vocabulary from Kanbun
 def extract_vocabulary(kanbun):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
-        messages=[{"role": "system", "content": "You are an expert in extracting vocabulary from Kanbun (漢文)."},
-                  {"role": "user", "content": f"Extract interesting vocabulary from this Kanbun: {kanbun}"}],
+        messages=[{"role": "system", "content": "You are an expert in analyzing Kanbun vocabulary."},
+                  {"role": "user", "content": f"Extract important vocabulary from the following Kanbun: {kanbun}"}],
         max_tokens=200,
         temperature=0.7
     )
     vocabulary = response.choices[0].message.content.strip()
     return vocabulary
 
-# Main function to handle the Streamlit app
+# Main application function
 def main():
-    st.title("AI Kanbun (漢文) Poem Generator")
+    st.title("🌸 AI-Generated Kanbun Poetry 🌸")
 
-    theme = st.text_input("Enter a theme for the poem (e.g., nature, seasons, flowers):")
+    # Brief explanation about Kanbun
+    st.markdown("""
+    **What is Kanbun?**  
+    Kanbun (漢文) refers to classical Chinese literature, widely used historically in Japan. It is known for its poetic elegance and scholarly depth. This application generates Kanbun poetry based on a theme, translates it into English, and provides key vocabulary for further analysis.
+    """)
 
-    if st.button("Generate Kanbun"):
+    theme = st.text_input("🌼 Enter a theme for the Kanbun poem (e.g., nature, seasons, flowers):")
+
+    if st.button("✨ Generate Kanbun ✨"):
         if theme:
-            prompt = f"Create a Kanbun (漢文) poem related to {theme}."
+            prompt = f"Create a Kanbun (classical Chinese) poem about {theme}."
             kanbun = generate_kanbun(prompt)
 
             # Translate Kanbun to English
             translation = translate_kanbun_to_english(kanbun)
 
-            # Extract interesting vocabulary
+            # Extract vocabulary
             vocabulary = extract_vocabulary(kanbun)
 
-            st.subheader("Generated Kanbun Poem:")
+            st.subheader("📜 Generated Kanbun Poem:")
             st.write(kanbun)
 
-            st.subheader("English Translation:")
+            st.subheader("🌐 English Translation:")
             st.write(translation)
 
-            st.subheader("Interesting Vocabulary from Kanbun:")
+            st.subheader("📚 Key Vocabulary from the Kanbun:")
             st.write(vocabulary)
 
             data = {
                 "Theme": [theme],
                 "Kanbun Poem": [kanbun],
                 "English Translation": [translation],
-                "Interesting Vocabulary": [vocabulary]
+                "Key Vocabulary": [vocabulary]
             }
             df = pd.DataFrame(data)
 
             # Display DataFrame
-            st.subheader("Data in Table Format:")
+            st.subheader("📊 Poem Details in Table Format:")
             st.dataframe(df)
 
-            # CSV download button
+            # Download buttons for CSV and Excel
             st.download_button(
-                label="Download as CSV",
-                data=df.to_csv(index=False),
+                label="💾 Download as CSV",
+                data=df.to_csv(index=False).encode('utf-8'),
                 file_name="kanbun_data.csv",
                 mime="text/csv"
             )
 
-            # Excel download button
-            excel_data = BytesIO()
-            df.to_excel(excel_data, index=False, engine='openpyxl')
-            excel_data.seek(0)
             st.download_button(
-                label="Download as Excel",
-                data=excel_data,
+                label="📄 Download as Excel",
+                data=df.to_excel(index=False, engine='openpyxl'),
                 file_name="kanbun_data.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
         else:
-            st.warning("Please provide a theme for the poem.")
+            st.warning("⚠️ Please enter a theme to generate a poem ⚠️")
 
 if __name__ == "__main__":
     main()
