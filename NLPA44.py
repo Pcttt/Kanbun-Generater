@@ -10,7 +10,7 @@ if openai_api_key:
 # Function to generate Kanbun (漢文) poems using the OpenAI API
 def generate_kanbun(prompt):
     # Send a request to ChatGPT to create a poem
-    response = openai.chat.completion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",  # or "gpt-4" if you want to use GPT-4
         messages=[{"role": "system", "content": "You are an expert in writing Kanbun (漢文) poems."},
                   {"role": "user", "content": prompt}],
