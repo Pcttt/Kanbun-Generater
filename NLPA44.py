@@ -48,7 +48,7 @@ if openai_api_key:
 
 # Function to generate Kanbun
 def generate_kanbun(prompt):
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "system", "content": "You are a skilled Kanbun (classical Chinese) poet."},
                   {"role": "user", "content": prompt}]
@@ -58,7 +58,7 @@ def generate_kanbun(prompt):
 
 # Function to translate Kanbun to English
 def translate_kanbun_to_english(kanbun):
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "system", "content": "You are an expert in translating Kanbun (classical Chinese) into English."},
                   {"role": "user", "content": f"Translate this Kanbun into English: {kanbun}"}]
@@ -68,7 +68,7 @@ def translate_kanbun_to_english(kanbun):
 
 # Function to extract vocabulary from Kanbun
 def extract_vocabulary(kanbun):
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are an expert in analyzing Kanbun (Chinese texts with Japanese reading order) and providing translations with part-of-speech tagging."},
