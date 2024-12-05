@@ -48,7 +48,7 @@ if openai_api_key:
 
 # Function to generate Kanbun
 def generate_kanbun(prompt):
-    response = openai.ChatCompletion.create(
+    response = openai.Chat.Completion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "system", "content": "You are a skilled Kanbun (classical Chinese) poet."},
                   {"role": "user", "content": prompt}],
