@@ -2,20 +2,6 @@ import openai
 import streamlit as st
 import pandas as pd
 
-<policies>
-    <inbound>
-        <base />
-        <rate-limit-by-key calls="10"
-              renewal-period="60"
-              increment-condition="@(context.Response.StatusCode == 200)"
-              counter-key="@(context.Request.IpAddress)"
-              remaining-calls-variable-name="remainingCallsPerIP"/>
-    </inbound>
-    <outbound>
-        <base />
-    </outbound>
-</policies>
-
 # Add custom styling
 st.markdown("""
     <style>
