@@ -6,42 +6,45 @@ import pandas as pd
 st.markdown("""
     <style>
     /* Light mode styling */
-    body {
-        background-color: #FFF8F0; /* Pastel peach background */
-        color: #4D4D4D; /* Neutral dark text color for visibility */
-    }
-    .stApp {
-        background-color: #FFF8F0;
-    }
-    h1 {
-        color: #FFB3BA; /* Pastel pink title color */
-        font-family: 'Arial', sans-serif;
-        text-align: center;
-    }
-    .stButton button {
-        background-color: #FFDFD3; /* Pastel coral buttons */
-        color: #D47F6A; /* Soft peach text */
-        font-size: 16px;
-        border-radius: 12px;
-        border: 2px solid #FFB3BA;
-    }
-    .stButton button:hover {
-        background-color: #FFD1C1; /* Slightly darker pastel coral on hover */
-    }
-    .stTextInput textarea {
-        background-color: #FEECEB; /* Pastel pink input field */
-        color: #8B5E5E; /* Soft brown text */
-        font-size: 14px;
-        border: 2px solid #FFB3BA;
-        border-radius: 10px;
-    }
-    .stDataFrame {
-        background-color: #E6F7F1; /* Pastel green for DataFrame */
-        border: 2px solid #B2E7C8; /* Green border */
-        border-radius: 10px;
+    @media (prefers-color-scheme: light) {
+        body {
+            background-color: #FFF8F0; /* Pastel peach background */
+            color: #4D4D4D; /* Neutral dark text color for visibility */
+        }
+        .stApp {
+            background-color: #FFF8F0;
+        }
+        h1 {
+            color: #FFB3BA; /* Pastel pink title color */
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+        }
+        .stButton button {
+            background-color: #FFDFD3; /* Pastel coral buttons */
+            color: #D47F6A; /* Soft peach text */
+            font-size: 16px;
+            border-radius: 12px;
+            border: 2px solid #FFB3BA;
+        }
+        .stButton button:hover {
+            background-color: #FFD1C1; /* Slightly darker pastel coral on hover */
+        }
+        .stTextInput textarea {
+            background-color: #FEECEB; /* Pastel pink input field */
+            color: #8B5E5E; /* Soft brown text */
+            font-size: 14px;
+            border: 2px solid #FFB3BA;
+            border-radius: 10px;
+        }
+        .stDataFrame {
+            background-color: #E6F7F1; /* Pastel green for DataFrame */
+            border: 2px solid #B2E7C8; /* Green border */
+            border-radius: 10px;
+        }
     }
 
     /* Dark mode styling */
+    
         body {
             background-color: #2E2E2E; /* Dark gray background */
             color: #F5F5F5; /* Light text color */
