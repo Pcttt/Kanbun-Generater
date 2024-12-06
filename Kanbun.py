@@ -6,7 +6,6 @@ import pandas as pd
 st.markdown("""
     <style>
     /* Light mode styling */
-    @media (prefers-color-scheme: light) {
         body {
             background-color: #FFF8F0; /* Pastel peach background */
             color: #4D4D4D; /* Neutral dark text color for visibility */
@@ -41,10 +40,9 @@ st.markdown("""
             border: 2px solid #B2E7C8; /* Green border */
             border-radius: 10px;
         }
-    }
 
     /* Dark mode styling */
-    
+     @media (prefers-color-scheme: dark) {
         body {
             background-color: #2E2E2E; /* Dark gray background */
             color: #F5F5F5; /* Light text color */
@@ -72,7 +70,7 @@ st.markdown("""
             background-color: #3A4B3C; /* Dark green for DataFrame */
             border: 2px solid #A5C4A7; /* Muted green border */
         }
-    
+    }
     </style>
 """, unsafe_allow_html=True)
 
