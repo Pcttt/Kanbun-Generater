@@ -81,7 +81,7 @@ if openai_api_key:
 
 # Function to generate Kanbun
 def generate_kanbun(prompt):
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a skilled Kanbun (classical Chinese) poet."},
@@ -93,7 +93,7 @@ def generate_kanbun(prompt):
 
 # Function to translate Kanbun to a selected language
 def translate_kanbun(kanbun, target_language):
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": f"You are an expert in translating Kanbun (classical Chinese) into {target_language}."},
@@ -105,7 +105,7 @@ def translate_kanbun(kanbun, target_language):
 
 # Function to extract vocabulary from Kanbun and translate to a selected language
 def extract_vocabulary(kanbun, target_language):
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": f"You are an expert in analyzing Kanbun (Chinese texts with Japanese reading order) and providing translations with part-of-speech tagging, JLPT levels, and pronunciation in {target_language}."},
@@ -127,7 +127,7 @@ def main():
 
     # Pre-filled starter text for the input box
     starter_text = "The cherry blossoms bloom as the sun rises, painting the sky with hues of pink and gold."
-    sentence = st.text_area("🌸 Enter a sentence or passage for the Kanbun poem (e.g., a short story or a descriptive paragraph):", value=starter_text)
+    sentence = st.text_area("🌻 Enter a sentence or passage for the Kanbun poem (e.g., a short story or a descriptive paragraph):", value=starter_text)
 
     # Language selection for translation
     languages = [
@@ -147,7 +147,7 @@ def main():
             # Extract vocabulary and translate to the selected language
             vocabulary = extract_vocabulary(kanbun, target_language)
 
-            st.subheader("🕌 Generated Kanbun Poem:")
+            st.subheader("🎋 Generated Kanbun Poem:")
             st.write(kanbun)
 
             st.subheader(f"🌐 Translation to {target_language}:")
