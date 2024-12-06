@@ -125,7 +125,7 @@ def main():
     Kanbun (漢文) refers to classical Chinese literature, widely used historically in Japan. It is known for its poetic elegance and scholarly depth. This application generates Kanbun poetry based on a passage or sentence, translates it into a selected language, and provides key vocabulary for further analysis!
     """)
 
-    sentence = st.text_area("🌻🌻 Enter a sentence or passage for the Kanbun poem (e.g., a short story or a descriptive paragraph):")
+    sentence = st.text_area("🌻 Enter a sentence or passage for the Kanbun poem (e.g., a short story or a descriptive paragraph):")
 
     # Language selection for translation
     languages = ["English", "Thai", "Korean", "French", "Spanish", "German"]
