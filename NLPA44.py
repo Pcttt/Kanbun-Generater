@@ -5,8 +5,10 @@ import pandas as pd
 # Add custom styling
 st.markdown("""
     <style>
+    /* Light mode styling */
     body {
         background-color: #FFF8F0; /* Pastel peach background */
+        color: #4D4D4D; /* Neutral dark text color for visibility */
     }
     .stApp {
         background-color: #FFF8F0;
@@ -37,6 +39,37 @@ st.markdown("""
         background-color: #E6F7F1; /* Pastel green for DataFrame */
         border: 2px solid #B2E7C8; /* Green border */
         border-radius: 10px;
+    }
+
+    /* Dark mode styling */
+    @media (prefers-color-scheme: dark) {
+        body {
+            background-color: #2E2E2E; /* Dark gray background */
+            color: #F5F5F5; /* Light text color */
+        }
+        .stApp {
+            background-color: #2E2E2E;
+        }
+        h1 {
+            color: #FFA6C9; /* Softer pastel pink for dark mode */
+        }
+        .stButton button {
+            background-color: #5C4C51; /* Muted pink for dark mode buttons */
+            color: #FFD1E8; /* Light pastel text */
+            border: 2px solid #FFA6C9;
+        }
+        .stButton button:hover {
+            background-color: #7A5C6A; /* Darker muted pink on hover */
+        }
+        .stTextInput textarea {
+            background-color: #4B4B4B; /* Dark gray input field */
+            color: #FFD1E8; /* Light pastel text */
+            border: 2px solid #FFA6C9;
+        }
+        .stDataFrame {
+            background-color: #3A4B3C; /* Dark green for DataFrame */
+            border: 2px solid #A5C4A7; /* Muted green border */
+        }
     }
     </style>
 """, unsafe_allow_html=True)
