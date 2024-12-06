@@ -109,7 +109,7 @@ def extract_vocabulary(kanbun, target_language):
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": f"You are an expert in analyzing Kanbun (Chinese texts with Japanese reading order) and providing translations with part-of-speech tagging, JLPT levels, and pronunciation in {target_language}."},
-            {"role": "user", "content": f"Extract important vocabulary from the following Kanbun text (a Chinese poem with Japanese reading order) and provide the {target_language} translation, romaji (pronunciation), example sentences, part-of-speech tags (e.g., noun, verb, adjective, etc.), and JLPT levels:\n{kanbun}"}
+            {"role": "user", "content": f"Extract important vocabulary from the following Kanbun text (a Chinese poem with Japanese reading order) and provide the {target_language} translation, romaji (pronunciation), example sentences, part-of-speech tags (e.g., noun, verb, adjective, etc.), and JLPT levels sorted from N5 to N1:\n{kanbun}"}
         ]
     )
     vocabulary = response['choices'][0]['message']['content'].strip()
@@ -125,7 +125,9 @@ def main():
     Kanbun (漢文) refers to classical Chinese literature, widely used historically in Japan. It is known for its poetic elegance and scholarly depth. This application generates Kanbun poetry based on a passage or sentence, translates it into a selected language, and provides key vocabulary for further analysis.
     """)
 
-    sentence = st.text_area("🌸 Enter a sentence or passage for the Kanbun poem (e.g., a short story or a descriptive paragraph):")
+    # Pre-filled starter text for the input box
+    starter_text = "The cherry blossoms bloom as the sun rises, painting the sky with hues of pink and gold."
+    sentence = st.text_area("🌸 Enter a sentence or passage for the Kanbun poem (e.g., a short story or a descriptive paragraph):", value=starter_text)
 
     # Language selection for translation
     languages = [
@@ -176,7 +178,7 @@ def main():
 
             st.download_button(
                 label="📄 Download as Excel",
-                data=df.to_excel(index=False, engine='openpyxl'),
+                data=df.to_excel(index=False, engine='openpyxl').encode('utf-8'),
                 file_name="kanbun_data.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
