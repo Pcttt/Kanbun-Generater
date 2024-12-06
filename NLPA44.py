@@ -81,7 +81,7 @@ if openai_api_key:
 
 # Function to generate Kanbun
 def generate_kanbun(prompt):
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a skilled Kanbun (classical Chinese) poet."},
@@ -93,7 +93,7 @@ def generate_kanbun(prompt):
 
 # Function to translate Kanbun to English
 def translate_kanbun_to_english(kanbun):
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are an expert in translating Kanbun (classical Chinese) into English."},
@@ -105,7 +105,7 @@ def translate_kanbun_to_english(kanbun):
 
 # Function to extract vocabulary from Kanbun
 def extract_vocabulary(kanbun):
-    response = openai.ChatCompletion.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are an expert in analyzing Kanbun (Chinese texts with Japanese reading order) and providing translations with part-of-speech tagging."},
@@ -125,7 +125,7 @@ def main():
     Kanbun (漢文) refers to classical Chinese literature, widely used historically in Japan. It is known for its poetic elegance and scholarly depth. This application generates Kanbun poetry based on a passage or sentence, translates it into English, and provides key vocabulary for further analysis.
     """)
 
-    sentence = st.text_area("🌸 Enter a sentence or passage for the Kanbun poem (e.g., a short story or a descriptive paragraph):")
+    sentence = st.text_area("🌻 Enter a sentence or passage for the Kanbun poem (e.g., a short story or a descriptive paragraph):")
 
     if st.button("✨ Generate Kanbun ✨"):
         if sentence:
