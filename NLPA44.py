@@ -81,7 +81,7 @@ if openai_api_key:
 
 # Function to generate Kanbun
 def generate_kanbun(prompt):
-    response = openai.chat.completions.create(
+    response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": "You are a skilled Kanbun (classical Chinese) poet."},
@@ -91,25 +91,25 @@ def generate_kanbun(prompt):
     kanbun = response['choices'][0]['message']['content'].strip()
     return kanbun
 
-# Function to translate Kanbun to English
-def translate_kanbun_to_english(kanbun):
-    response = openai.chat.completions.create(
+# Function to translate Kanbun to a selected language
+def translate_kanbun(kanbun, target_language):
+    response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You are an expert in translating Kanbun (classical Chinese) into English."},
-            {"role": "user", "content": f"Translate this Kanbun into English: {kanbun}"}
+            {"role": "system", "content": f"You are an expert in translating Kanbun (classical Chinese) into {target_language}."},
+            {"role": "user", "content": f"Translate this Kanbun into {target_language}: {kanbun}"}
         ]
     )
     translation = response['choices'][0]['message']['content'].strip()
     return translation
 
-# Function to extract vocabulary from Kanbun
-def extract_vocabulary(kanbun):
-    response = openai.chat.completions.create(
+# Function to extract vocabulary from Kanbun and translate to a selected language
+def extract_vocabulary(kanbun, target_language):
+    response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": "You are an expert in analyzing Kanbun (Chinese texts with Japanese reading order) and providing translations with part-of-speech tagging."},
-            {"role": "user", "content": f"Extract important vocabulary from the following Kanbun text (a Chinese poem with Japanese reading order) and provide the English translation along with part-of-speech tags (e.g., noun, verb, adjective, etc.):\n{kanbun}"}
+            {"role": "system", "content": f"You are an expert in analyzing Kanbun (Chinese texts with Japanese reading order) and providing translations with part-of-speech tagging in {target_language}."},
+            {"role": "user", "content": f"Extract important vocabulary from the following Kanbun text (a Chinese poem with Japanese reading order) and provide the {target_language} translation along with part-of-speech tags (e.g., noun, verb, adjective, etc.):\n{kanbun}"}
         ]
     )
     vocabulary = response['choices'][0]['message']['content'].strip()
@@ -122,36 +122,40 @@ def main():
     # Brief explanation about Kanbun
     st.markdown("""
     **What is Kanbun?**  
-    Kanbun (漢文) refers to classical Chinese literature, widely used historically in Japan. It is known for its poetic elegance and scholarly depth. This application generates Kanbun poetry based on a passage or sentence, translates it into English, and provides key vocabulary for further analysis.
+    Kanbun (漢文) refers to classical Chinese literature, widely used historically in Japan. It is known for its poetic elegance and scholarly depth. This application generates Kanbun poetry based on a passage or sentence, translates it into a selected language, and provides key vocabulary for further analysis.
     """)
 
-    sentence = st.text_area("🌻 Enter a sentence or passage for the Kanbun poem (e.g., a short story or a descriptive paragraph):")
+    sentence = st.text_area("🌸 Enter a sentence or passage for the Kanbun poem (e.g., a short story or a descriptive paragraph):")
+
+    # Language selection for translation
+    languages = ["English", "Japanese", "Korean", "French", "Spanish", "German"]
+    target_language = st.selectbox("🌐 Select the language for translation:", languages)
 
     if st.button("✨ Generate Kanbun ✨"):
         if sentence:
             prompt = f"Create a Kanbun (classical Chinese) poem based on the following sentence or passage: {sentence}"
             kanbun = generate_kanbun(prompt)
 
-            # Translate Kanbun to English
-            translation = translate_kanbun_to_english(kanbun)
+            # Translate Kanbun to the selected language
+            translation = translate_kanbun(kanbun, target_language)
 
-            # Extract vocabulary
-            vocabulary = extract_vocabulary(kanbun)
+            # Extract vocabulary and translate to the selected language
+            vocabulary = extract_vocabulary(kanbun, target_language)
 
             st.subheader("🕌 Generated Kanbun Poem:")
             st.write(kanbun)
 
-            st.subheader("🌐 English Translation:")
+            st.subheader(f"🌐 Translation to {target_language}:")
             st.write(translation)
 
-            st.subheader("📚 Key Vocabulary from the Kanbun:")
+            st.subheader(f"📚 Key Vocabulary in {target_language}:")
             st.write(vocabulary)
 
             data = {
                 "Input Sentence/Passage": [sentence],
                 "Kanbun Poem": [kanbun],
-                "English Translation": [translation],
-                "Key Vocabulary": [vocabulary]
+                f"Translation to {target_language}": [translation],
+                f"Key Vocabulary in {target_language}": [vocabulary]
             }
             df = pd.DataFrame(data)
 
