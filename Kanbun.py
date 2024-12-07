@@ -25,11 +25,11 @@ generate_button = st.markdown(
 )
 
 
-# Sidebar for API key input
+
 openai_api_key = st.sidebar.text_input("🔑 Enter your OpenAI API Key:", type="password")
 
 if openai_api_key:
-    openai.api_key = openai_api_key  # Set the OpenAI API key
+    openai.api_key = openai_api_key  
 
 def generate_kanbun(prompt):
     response = openai.chat.completions.create(
