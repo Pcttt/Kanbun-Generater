@@ -31,7 +31,7 @@ if openai_api_key:
 
 if not api_key:
     st.warning("⚠️ Please enter a valid API key to proceed!")
-        return
+return
 
 def generate_kanbun(prompt):
     response = openai.chat.completions.create(
