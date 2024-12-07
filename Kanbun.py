@@ -111,7 +111,7 @@ def main():
 
             st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
 
-            st.subheader("🌋 Generated Kanbun Poem:")
+            st.subheader("🎋 Generated Kanbun Poem:")
             st.write(kanbun)
 
             st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
@@ -134,7 +134,7 @@ def main():
             }
             df = pd.DataFrame(data)
 
-            st.subheader("🔢 Poem Details in Table Format:")
+            st.subheader("📊 Poem Details in Table Format:")
             st.dataframe(df)
 
             excel = BytesIO()
@@ -144,14 +144,14 @@ def main():
             excel.seek(0)
 
             st.download_button(
-                label="🔀 Download as CSV",
+                label="📏 Download as CSV",
                 data=df.to_csv(index=False).encode('utf-8'),
                 file_name="kanbun_data.csv",
                 mime="text/csv"
             )
 
             st.download_button(
-                label="🗌 Download as Excel",
+                label="📄 Download as Excel",
                 data=excel,
                 file_name="kanbun_data.xlsx",
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
