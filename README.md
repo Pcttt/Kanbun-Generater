@@ -57,3 +57,7 @@ Click the Generate Kanbun button to view the poem, translation, and vocabulary a
 Step 4: Export Results
 
 Download your results as CSV or Excel for further study or sharing.
+
+______________________________
+
+Made with 💖
