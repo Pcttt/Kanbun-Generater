@@ -28,8 +28,6 @@ openai_api_key = st.sidebar.text_input("🔑 Enter your OpenAI API Key:", type="
 
 if openai_api_key:
     openai.api_key = openai_api_key  
-else:
-    st.warning("⚠️ Please enter a valid API key ⚠️")
 
 def generate_kanbun(prompt):
     response = openai.chat.completions.create(
