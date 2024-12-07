@@ -33,12 +33,6 @@ if not api_key:
     st.warning("⚠️ Please enter a valid API key to proceed!")
     return
 
-try:
-    openai.api_key = api_key
-except Exception as e:
-    st.error(f"❌ Invalid API key: {e}")
-    return
-
 def generate_kanbun(prompt):
     response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
