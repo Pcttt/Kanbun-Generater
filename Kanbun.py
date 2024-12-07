@@ -42,12 +42,23 @@ def generate_kanbun(prompt):
     kanbun = response.choices[0].message.content.strip()
     return kanbun
 
-def translate_kanbun(kanbun, target_language):
+def convert_kanbun_to_japanese(kanbun):
     response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": f"You are an expert in translating Kanbun (Japanese method of reading, annotating, and translating literary Chinese) into {target_language}."},
-            {"role": "user", "content": f"Translate this Kanbun into {target_language}: {kanbun}"}
+            {"role": "system", "content": "You are an expert in converting Kanbun (Japanese method of reading, annotating, and translating literary Chinese) into modern Japanese."},
+            {"role": "user", "content": f"Convert this Kanbun text to Japanese:\n{kanbun}"}
+        ]
+    )
+    japanese = response.choices[0].message.content.strip()
+    return japanese
+
+def translate_kanbun(japanese_text, target_language):
+    response = openai.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": f"You are an expert in translating Japanese text into {target_language}."},
+            {"role": "user", "content": f"Translate this Japanese text into {target_language}:\n{japanese_text}"}
         ]
     )
     translation = response.choices[0].message.content.strip()
@@ -58,7 +69,7 @@ def extract_vocabulary(kanbun, target_language):
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": f"You are an expert in analyzing Kanbun (Japanese method of reading, annotating, and translating literary Chinese) and providing translations with part-of-speech tagging, JLPT levels, and pronunciation in {target_language}."},
-            {"role": "user", "content": f"Extract important vocabulary from the following Kanbun text and provide the {target_language} translation, romaji (pronunciation), example sentences, part-of-speech tags (e.g., noun, verb, adjective, etc.), and JLPT levels sorted from N5 to N1:\n{kanbun}"}
+            {"role": "user", "content": f"Extract important Japanese vocabulary from the following Kanbun text and provide the {target_language} translation, romaji (pronunciation), example sentences of those Japanese words, part-of-speech tags (e.g., noun, verb, adjective, etc.), and JLPT levels sorted from N5 to N1:\n{kanbun}"}
         ]
     )
     vocabulary = response.choices[0].message.content.strip()
@@ -105,6 +116,8 @@ def main():
             prompt = f"Create a Kanbun (Japanese method of reading, annotating, and translating literary Chinese) poem based on the following sentence or passage: {sentence}"
             kanbun = generate_kanbun(prompt)
 
+            japanese_text = convert_kanbun_to_japanese(kanbun)
+
             translation = translate_kanbun(kanbun, target_language)
 
             vocabulary = extract_vocabulary(kanbun, target_language)
@@ -113,6 +126,11 @@ def main():
 
             st.subheader("🎋 Generated Kanbun Poem:")
             st.write(kanbun)
+
+            st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
+
+            st.subheader("📖 Converted Japanese Text:")
+            st.write(japanese_text)
 
             st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
 
@@ -129,6 +147,7 @@ def main():
             data = {
                 "Input Sentence/Passage": [sentence],
                 "Kanbun Poem": [kanbun],
+                "Converted Japanese Text": [japanese_text],
                 f"Translation to {target_language}": [translation],
                 f"Key Vocabulary in {target_language} (with JLPT levels and examples)": [vocabulary]
             }
