@@ -43,7 +43,7 @@ def generate_kanbun(prompt):
     return kanbun
 
 def translate_kanbun(kanbun, target_language):
-   response = openai.chat.completions.create(
+    response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": f"You are an expert in translating Kanbun (Japanese method of reading, annotating, and translating literary Chinese) into {target_language}."},
