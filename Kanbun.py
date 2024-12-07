@@ -30,8 +30,8 @@ if openai_api_key:
     openai.api_key = openai_api_key  
 
 if not api_key:
-        st.warning("⚠️ Please enter a valid API key to proceed!")
-        return
+    st.warning("⚠️ Please enter a valid API key to proceed!")
+    return
 
 try:
     openai.api_key = api_key
