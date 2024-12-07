@@ -39,7 +39,7 @@ def generate_kanbun(prompt):
             {"role": "user", "content": prompt}
         ]
     )
-    kanbun = response["choices"][0]["message"]["content"].strip()
+    kanbun = response.choices[0].message.content.strip()
     return kanbun
 
 def translate_kanbun(kanbun, target_language):
@@ -50,7 +50,7 @@ def translate_kanbun(kanbun, target_language):
             {"role": "user", "content": f"Translate this Kanbun into {target_language}: {kanbun}"}
         ]
     )
-    translation = response["choices"][0]["message"]["content"].strip()
+    translation = response.choices[0].message.content.strip()
     return translation
 
 def extract_vocabulary(kanbun, target_language):
@@ -61,7 +61,7 @@ def extract_vocabulary(kanbun, target_language):
             {"role": "user", "content": f"Extract important vocabulary from the following Kanbun text and provide the {target_language} translation, romaji (pronunciation), example sentences, part-of-speech tags (e.g., noun, verb, adjective, etc.), and JLPT levels sorted from N5 to N1:\n{kanbun}"}
         ]
     )
-    vocabulary = response["choices"][0]["message"]["content"].strip()
+    vocabulary = response.choices[0].message.content.strip()
     return vocabulary
 
 def main():
