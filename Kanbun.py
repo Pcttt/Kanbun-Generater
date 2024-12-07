@@ -24,8 +24,6 @@ generate_button = st.markdown(
     unsafe_allow_html=True
 )
 
-
-
 openai_api_key = st.sidebar.text_input("🔑 Enter your OpenAI API Key:", type="password")
 
 if openai_api_key:
@@ -64,12 +62,12 @@ def translate_kanbun(japanese_text, target_language):
     translation = response.choices[0].message.content.strip()
     return translation
 
-def extract_vocabulary(kanbun, target_language):
+def extract_vocabulary(translation, target_language):
     response = openai.chat.completions.create(
         model="gpt-3.5-turbo",
         messages=[
-            {"role": "system", "content": f"You are an expert in analyzing Kanbun (Japanese method of reading, annotating, and translating literary Chinese) and providing translations with part-of-speech tagging, JLPT levels, and pronunciation in {target_language}."},
-            {"role": "user", "content": f"Extract important Japanese vocabulary from the following Kanbun text and provide the {target_language} translation, romaji (pronunciation), example sentences of those Japanese words, part-of-speech tags (e.g., noun, verb, adjective, etc.), and JLPT levels sorted from N5 to N1:\n{kanbun}"}
+            {"role": "system", "content": f"You are an expert in analyzing Japanese text and providing translations with part-of-speech tagging, JLPT levels, and pronunciation in {target_language}."},
+            {"role": "user", "content": f"Extract important Japanese vocabulary from the following Kanbun text and provide the {target_language} translation, romaji (pronunciation), example sentences of those Japanese words, part-of-speech tags (e.g., noun, verb, adjective, etc.), and JLPT levels sorted from N5 to N1:\n{translation}, do not say intro, just give me the lists"}
         ]
     )
     vocabulary = response.choices[0].message.content.strip()
@@ -120,7 +118,7 @@ def main():
 
             translation = translate_kanbun(kanbun, target_language)
 
-            vocabulary = extract_vocabulary(kanbun, target_language)
+            vocabulary = extract_vocabulary(translation, target_language)
 
             st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
 
@@ -161,13 +159,6 @@ def main():
             with pd.ExcelWriter(excel, engine='openpyxl') as writer:
                 df.to_excel(writer, index=False, sheet_name="Kanbun")
             excel.seek(0)
-
-            st.download_button(
-                label="📏 Download as CSV",
-                data=df.to_csv(index=False).encode('utf-8'),
-                file_name="kanbun_data.csv",
-                mime="text/csv"
-            )
 
             st.download_button(
                 label="📄 Download as Excel",
