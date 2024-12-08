@@ -5,9 +5,9 @@ import openpyxl as xl
 import io
 from io import BytesIO
 
-
-layout="wide"                  # Sets the layout to wide
-
+st.set_page_config(
+    layout="wide"                  # Sets the layout to wide
+)
 
 generate_button = st.markdown(
     """
