@@ -107,7 +107,7 @@ def main():
     ]
     target_language = st.selectbox("**🌐 Select the language for translation:**", languages)
 
-     generate_clicked = st.button("✨ Generate Kanbun ✨")
+    generate_clicked = st.button("✨ Generate Kanbun ✨")
 
     if generate_clicked:
         if not key_provided:
