@@ -25,7 +25,7 @@ generate_button = st.markdown(
 )
 
 api_key = st.sidebar.text_input("🔑 Enter your OpenAI API key:", type="password")
-key_provided = bool(api_key)  # Check if the key is provided
+key_provided = bool(api_key) 
 
 def generate_kanbun(prompt):
     response = openai.chat.completions.create(
@@ -111,21 +111,18 @@ def main():
 
     if generate_clicked:
         if not key_provided:
-            # Show the warning below the button
             st.warning("⚠️ Please enter a valid API key ⚠️")
         elif sentence:
             try:
                 openai.api_key = api_key
                 prompt = f"Create a Kanbun (Japanese method of reading, annotating, and translating literary Chinese) poem based on the following sentence or passage: {sentence}"
+                
                 kanbun = generate_kanbun(prompt)
 
-                # Convert Kanbun to Japanese
                 japanese_text = convert_kanbun_to_japanese(kanbun)
 
-                # Translate Japanese to the target language
                 translation = translate_kanbun(japanese_text, target_language)
-
-                # Extract Vocabulary
+              
                 vocabulary = extract_vocabulary(kanbun, target_language)
 
                 st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
@@ -150,7 +147,7 @@ def main():
 
                 st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
 
-                # Prepare data for table and export
+                
                 data = {
                     "Input Sentence/Passage": [sentence],
                     "Kanbun Poem": [kanbun],
@@ -170,19 +167,13 @@ def main():
                 excel.seek(0)
 
                 st.download_button(
-                    label="📏 Download as CSV",
-                    data=df.to_csv(index=False).encode('utf-8'),
-                    file_name="kanbun_data.csv",
-                    mime="text/csv"
-                )
-
-                st.download_button(
                     label="📄 Download as Excel",
                     data=excel,
                     file_name="kanbun_data.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     key="kanbun_data_download"
                 )
+                
             except Exception as e:
                 st.warning("⚠️ Incorrect OpenAI API key provided ⚠️")
         else:
