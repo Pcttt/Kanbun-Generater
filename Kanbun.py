@@ -26,8 +26,17 @@ generate_button = st.markdown(
 
 openai_api_key = st.sidebar.text_input("🔑 Enter your OpenAI API Key:", type="password")
 
+# ตรวจสอบว่า API Key ถูกกรอกแล้วหรือไม่
 if openai_api_key:
-    openai.api_key = openai_api_key  
+    try:
+        openai.api_key = openai_api_key  
+        # ทดสอบการเชื่อมต่อกับ OpenAI API ด้วยการดึงข้อมูลโมเดล
+        openai.Model.list()  # ลองเรียกโมเดล API เพื่อตรวจสอบว่า API Key ใช้งานได้หรือไม่
+    except openai.error.AuthenticationError:
+        st.sidebar.error("⚠️ Please enter a valid API Key.")
+else:
+    st.sidebar.info("🔑 Please enter your OpenAI API Key.")
+
 
 def generate_kanbun(prompt):
     response = openai.chat.completions.create(
