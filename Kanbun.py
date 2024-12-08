@@ -25,7 +25,7 @@ generate_button = st.markdown(
 )
 
 api_key = st.text_input("🔑 Enter your OpenAI API key:", type="password")
-    key_provided = bool(api_key)  # Check if the key is provided
+key_provided = bool(api_key)  # Check if the key is provided
 
 def generate_kanbun(prompt):
     response = openai.chat.completions.create(
