@@ -5,6 +5,13 @@ import openpyxl as xl
 import io
 from io import BytesIO
 
+st.set_page_config(
+    page_title="Kanbun Generator",  # Title of the app in the browser tab
+    page_icon="🌸",                # Icon displayed in the browser tab
+    layout="wide"                  # Sets the layout to wide
+)
+
+
 generate_button = st.markdown(
     """
     <style>
