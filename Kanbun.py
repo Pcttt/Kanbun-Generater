@@ -24,19 +24,8 @@ generate_button = st.markdown(
     unsafe_allow_html=True
 )
 
-openai_api_key = st.sidebar.text_input("🔑 Enter your OpenAI API Key:", type="password")
-
-# ตรวจสอบว่า API Key ถูกกรอกแล้วหรือไม่
-if openai_api_key:
-    try:
-        openai.api_key = openai_api_key  
-        # ทดสอบการเชื่อมต่อกับ OpenAI API ด้วยการดึงข้อมูลโมเดล
-        openai.Model.list()  # ลองเรียกโมเดล API เพื่อตรวจสอบว่า API Key ใช้งานได้หรือไม่
-    except openai.error.AuthenticationError:
-        st.sidebar.error("⚠️ Please enter a valid API Key.")
-else:
-    st.sidebar.info("🔑 Please enter your OpenAI API Key.")
-
+api_key = st.text_input("🔑 Enter your OpenAI API key:", type="password")
+    key_provided = bool(api_key)  # Check if the key is provided
 
 def generate_kanbun(prompt):
     response = openai.chat.completions.create(
@@ -118,64 +107,84 @@ def main():
     ]
     target_language = st.selectbox("**🌐 Select the language for translation:**", languages)
 
-    if st.button("✨ Generate Kanbun ✨"):
-        if sentence:
-            prompt = f"Create a Kanbun (Japanese method of reading, annotating, and translating literary Chinese) poem based on the following sentence or passage: {sentence}"
-            kanbun = generate_kanbun(prompt)
+     generate_clicked = st.button("✨ Generate Kanbun ✨")
 
-            japanese_text = convert_kanbun_to_japanese(kanbun)
+    if generate_clicked:
+        if not key_provided:
+            # Show the warning below the button
+            st.warning("⚠️ Please enter a valid API key!")
+        elif sentence:
+            try:
+                openai.api_key = api_key
+                prompt = f"Create a Kanbun (Japanese method of reading, annotating, and translating literary Chinese) poem based on the following sentence or passage: {sentence}"
+                kanbun = generate_kanbun(prompt)
 
-            translation = translate_kanbun(kanbun, target_language)
+                # Convert Kanbun to Japanese
+                japanese_text = convert_kanbun_to_japanese(kanbun)
 
-            vocabulary = extract_vocabulary(translation, target_language)
+                # Translate Japanese to the target language
+                translation = translate_kanbun(japanese_text, target_language)
 
-            st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
+                # Extract Vocabulary
+                vocabulary = extract_vocabulary(kanbun, target_language)
 
-            st.subheader("🎋 Generated Kanbun Poem:")
-            st.write(kanbun)
+                st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
 
-            st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
+                st.subheader("🎋 Generated Kanbun Poem:")
+                st.write(kanbun)
 
-            st.subheader("🎐 Converted Japanese Text:")
-            st.write(japanese_text)
+                st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
 
-            st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
+                st.subheader("📖 Converted Japanese Text:")
+                st.write(japanese_text)
 
-            st.subheader(f"🌐 Translation to {target_language}:")
-            st.write(translation)
+                st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
 
-            st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
+                st.subheader(f"🌐 Translation to {target_language}:")
+                st.write(translation)
 
-            st.subheader(f"📚 Key Vocabulary in {target_language} (with JLPT levels and examples):")
-            st.write(vocabulary)
+                st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
 
-            st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
+                st.subheader(f"📚 Key Vocabulary in {target_language} (with JLPT levels and examples):")
+                st.write(vocabulary)
 
-            data = {
-                "Input Sentence/Passage": [sentence],
-                "Kanbun Poem": [kanbun],
-                "Converted Japanese Text": [japanese_text],
-                f"Translation to {target_language}": [translation],
-                f"Key Vocabulary in {target_language} (with JLPT levels and examples)": [vocabulary]
-            }
-            df = pd.DataFrame(data)
+                st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
 
-            st.subheader("📊 Poem Details in Table Format:")
-            st.dataframe(df)
+                # Prepare data for table and export
+                data = {
+                    "Input Sentence/Passage": [sentence],
+                    "Kanbun Poem": [kanbun],
+                    "Converted Japanese Text": [japanese_text],
+                    f"Translation to {target_language}": [translation],
+                    f"Key Vocabulary in {target_language} (with JLPT levels and examples)": [vocabulary]
+                }
+                df = pd.DataFrame(data)
 
-            excel = BytesIO()
+                st.subheader("📊 Poem Details in Table Format:")
+                st.dataframe(df)
 
-            with pd.ExcelWriter(excel, engine='openpyxl') as writer:
-                df.to_excel(writer, index=False, sheet_name="Kanbun")
-            excel.seek(0)
+                excel = BytesIO()
 
-            st.download_button(
-                label="📄 Download as Excel",
-                data=excel,
-                file_name="kanbun_data.xlsx",
-                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                key="kanbun_data_download"
-            )
+                with pd.ExcelWriter(excel, engine='openpyxl') as writer:
+                    df.to_excel(writer, index=False, sheet_name="Kanbun")
+                excel.seek(0)
+
+                st.download_button(
+                    label="📏 Download as CSV",
+                    data=df.to_csv(index=False).encode('utf-8'),
+                    file_name="kanbun_data.csv",
+                    mime="text/csv"
+                )
+
+                st.download_button(
+                    label="📄 Download as Excel",
+                    data=excel,
+                    file_name="kanbun_data.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    key="kanbun_data_download"
+                )
+            except Exception as e:
+                st.error(f"❌ An error occurred: {e}")
         else:
             st.warning("⚠️ Please enter a sentence or passage to generate a poem ⚠️")
 
