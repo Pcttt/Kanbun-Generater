@@ -5,11 +5,8 @@ import openpyxl as xl
 import io
 from io import BytesIO
 
-st.set_page_config(
-    page_title="Kanbun Generator",  # Title of the app in the browser tab
-    page_icon="🌸",                # Icon displayed in the browser tab
-    layout="wide"                  # Sets the layout to wide
-)
+
+layout="wide"                  # Sets the layout to wide
 
 
 generate_button = st.markdown(
@@ -90,7 +87,7 @@ def main():
 
     st.markdown("""
     **What is Kanbun?**  
-    Kanbun (漢文) refers to classical Chinese literature, widely used historically in Japan. It is known for its poetic elegance and scholarly depth. This application generates Kanbun poetry based on a passage or sentence, translates it into a selected language, and provides key vocabulary for further analysis!
+    Kanbun (漢文) refers to classical Chinese literature, widely used historically in Japan. It is known for its poetic elegance and scholarly depth. This application generates Kanbun poetry based on a passage or sentence, translates it into a selected language, and provides key vocabulary for further analysis.
     """)
 
     st.markdown("""
