@@ -6,7 +6,7 @@ import io
 from io import BytesIO
 
 st.set_page_config(
-    layout="wide"                  # Sets the layout to wide
+    layout="wide"                 
 )
 
 generate_button = st.markdown(
@@ -136,7 +136,7 @@ def main():
 
                 st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
 
-                st.subheader("📖 Converted Japanese Text:")
+                st.subheader("🎐 Converted Japanese Text:")
                 st.write(japanese_text)
 
                 st.markdown("<hr style='border: 1px solid #D3D3D3; margin-top: 10px; margin-bottom: 10px;'>", unsafe_allow_html=True)
