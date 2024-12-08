@@ -179,7 +179,7 @@ def main():
                 )
                 
             except Exception as e:
-                 st.error(f"⚠️ An error occurred: {e}")
+                st.error(f"⚠️ An error occurred: {e}")
         else:
             st.warning("⚠️ Please enter a sentence or passage to generate a poem ⚠️")
 
