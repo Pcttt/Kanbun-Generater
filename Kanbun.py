@@ -184,7 +184,7 @@ def main():
                     key="kanbun_data_download"
                 )
             except Exception as e:
-                st.warning("⚠️ Incorrect API key provided ⚠️")
+                st.warning("⚠️ Incorrect OpenAI API key provided ⚠️")
         else:
             st.warning("⚠️ Please enter a sentence or passage to generate a poem ⚠️")
 
