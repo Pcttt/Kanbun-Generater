@@ -24,7 +24,7 @@ generate_button = st.markdown(
     unsafe_allow_html=True
 )
 
-api_key = st.text_input("🔑 Enter your OpenAI API key:", type="password")
+api_key = st.sidebar.text_input("🔑 Enter your OpenAI API key:", type="password")
 key_provided = bool(api_key)  # Check if the key is provided
 
 def generate_kanbun(prompt):
@@ -112,7 +112,7 @@ def main():
     if generate_clicked:
         if not key_provided:
             # Show the warning below the button
-            st.warning("⚠️ Please enter a valid API key!")
+            st.warning("⚠️ Please enter a valid API key ⚠️")
         elif sentence:
             try:
                 openai.api_key = api_key
@@ -184,7 +184,7 @@ def main():
                     key="kanbun_data_download"
                 )
             except Exception as e:
-                st.error(f"❌ An error occurred: {e}")
+                st.warning("⚠️ Incorrect API key provided ⚠️")
         else:
             st.warning("⚠️ Please enter a sentence or passage to generate a poem ⚠️")
 
